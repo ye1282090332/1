@@ -120,7 +120,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     stat.textContent = Math.floor(current);
                     requestAnimationFrame(updateNumber);
                 } else {
-                    stat.textContent = target;
+                    if (target === 1000 || target === 500) {
+                        stat.textContent = target + '+';
+                    } else {
+                        stat.textContent = target;
+                    }
                 }
             };
 
