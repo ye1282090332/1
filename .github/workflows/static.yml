@@ -1,0 +1,43 @@
+# 将静态内容部署到 GitHub Pages 的简单工作流
+名称: 将静态内容部署到 Pages
+
+触发:
+  # Runs on pushes targeting the default branch
+推送:
+分支: [“main”]
+
+  # 允许您从“操作”选项卡手动运行此工作流
+ 工作流调度:
+
+# 将 GITHUB_TOKEN 的权限设置为允许部署到 GitHub Pages
+权限:
+内容: 读取
+页面: 写
+身份令牌: write
+
+# 仅允许一次并发部署，跳过正在进行的部署与最新排队之间已有的排队运行。
+# 但请勿取消正在进行的部署，因为我们希望这些生产部署能够顺利完成。
+concurrency:
+  group: "pages"
+取消中: false
+
+作业:
+  # 仅部署作业，因为我们只是在部署
+部署:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
